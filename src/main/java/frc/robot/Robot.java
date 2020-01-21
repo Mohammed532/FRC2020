@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import java.nio.ByteBuffer;
+import edu.wpi.first.wpilibj.I2C;
+import com.revrobotics.frc.ColorSensorV3.json;
 
 
 public class Robot extends TimedRobot {
@@ -19,6 +23,8 @@ public class Robot extends TimedRobot {
   private final XboxController c_xbox = new XboxController(0); //Xbox controller port is a placeholder
   private final Timer timer = new Timer();
 
+  private final ColorSensor s_color = new ColorSensor(port)
+ 
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -28,6 +34,7 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    
   }
 
   /**
@@ -40,7 +47,34 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    
+    
+    String gameData;
+  gameData = DriverStation.getInstance().getGameSpecificMessage();
+  if(gameData.length() > 0)
+  {
+    switch (gameData.charAt(0))
+    {
+      case 'B' :
+        //Blue case code
+        break;
+      case 'G' :
+        //Green case code
+        break;
+      case 'R' :
+        //Red case code
+        break;
+      case 'Y' :
+        //Yellow case code
+        break;
+      default :
+        //This is corrupt data
+        break;
+    }
+  } else {
+    //Code for no data received yet
   }
+}
 
   /**
    * This autonomous (along with the chooser code above) shows how to select
@@ -81,6 +115,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+ 
   }
 
   /**
