@@ -78,9 +78,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    double speedMod = 0.6;
+    public double speed = 0.6;
   }
-  
+
   /**
    * This function is called periodically during operator control.
    */
@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     double lXAxis = c_xbox.getRawAxis(1);
     double lYAxis = c_xbox.getRawAxis(0);
-    getspeedMod();
+    double speedMod = getspeedMod(speed);
     robotDrive.arcadeDrive(lXAxis * speedMod,lYAxis * speedMod);
    // m_myRobot.arcadeDrive(m_leftStick.getY(), m_rightStick.getY(Hand.kRight));
   }
@@ -100,28 +100,27 @@ public class Robot extends TimedRobot {
   
     if(ybutton) {
       
-      System.out.println ("Y button is pressed female dog")
-      return 0.75;
+      System.out.println ("Y button is pressed female dog");
+      speedMod = 0.75;
   
     }
     if(bbutton) { 
       
-      System.out.println ("B button is pressed coronavirus")
-      return 0.50;
+      System.out.println ("B button is pressed coronavirus");
+      speedMod = 0.50;
   
     }
     if(abutton) {
       
-      System.out.println ("A button is pressed black boy")
-      return 0.25;
+      System.out.println ("A button is pressed black boy");
+      speedMod = 0.25;
   
     }
   
-    return speedMod; 
+  return speedMod; 
 
-    }
-  
   }
+  
 
   /**
    * This function is called periodically during test mode.
