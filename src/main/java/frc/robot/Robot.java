@@ -19,6 +19,8 @@ public class Robot extends TimedRobot {
   private final XboxController c_xbox = new XboxController(0); //Xbox controller port is a placeholder
   private final Timer timer = new Timer();
 
+  private double intSpeed;
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -78,7 +80,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    public double speed = 0.6;
+    intSpeed = 0.5;
   }
 
   /**
@@ -86,18 +88,33 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    boolean yButtonPressed = c_xbox.getYButtonPressed();
+    boolean bbuttonPressed = c_xbox.getBButtonPressed();
+    boolean abuttonPressed = c_xbox.getAButtonPressed(); 
     double lXAxis = c_xbox.getRawAxis(1);
     double lYAxis = c_xbox.getRawAxis(0);
-    double speedMod = getspeedMod(speed);
-    robotDrive.arcadeDrive(lXAxis * speedMod,lYAxis * speedMod);
-   // m_myRobot.arcadeDrive(m_leftStick.getY(), m_rightStick.getY(Hand.kRight));
-  }
 
-  public double getspeedMod() {
-    boolean ybutton = c_xbox.getYButton();
-    boolean bbutton = c_xbox.getBButton();
-    boolean abutton = c_xbox.getAButton();
-  
+    boolean abutton = false;
+    boolean bbutton = false;
+    boolean ybutton = false;
+
+    double speedMod = intSpeed;
+    // String anyButtonPressed = "";
+
+    if (yButtonPressed){
+      ybutton = true;
+      bbutton = false;
+      abutton = false;
+    } else if (bbuttonPressed){
+      ybutton = false;
+      bbutton = true;
+      abutton = false;
+    } else if (abuttonPressed){
+      ybutton = false;
+      bbutton = false;
+      abutton = true;
+    }
+
     if(ybutton) {
       
       System.out.println ("Y button is pressed female dog");
@@ -116,10 +133,99 @@ public class Robot extends TimedRobot {
       speedMod = 0.25;
   
     }
-  
-  return speedMod; 
 
+    robotDrive.arcadeDrive(lXAxis * speedMod,lYAxis * speedMod);
+
+    /*if (ybutton || bbutton || abutton){
+      anyButtonPressed = "true";
+    }*/
+
+    /*if (anyButtonPressed != "true"){
+      speedMod = intSpeed;
+      robotDrive.arcadeDrive(lXAxis * speedMod,lYAxis * speedMod);
+
+    }else if (anyButtonPressed == "true"){
+      
+      if(ybutton) {
+      
+        System.out.println ("Y button is pressed female dog");
+        speedMod = 0.75;
+    
+      }
+      if(bbutton) { 
+        
+        System.out.println ("B button is pressed coronavirus");
+        speedMod = 0.50;
+    
+      }
+      if(abutton) {
+        
+        System.out.println ("A button is pressed black boy");
+        speedMod = 0.25;
+    
+      }
+
+      robotDrive.arcadeDrive(lXAxis * speedMod,lYAxis * speedMod);
+
+    }*/
+    
+
+    /*if(ybutton) {
+      
+      System.out.println ("Y button is pressed female dog");
+      speedMod = 0.75;
+  
+    }
+    if(bbutton) { 
+      
+      System.out.println ("B button is pressed coronavirus");
+      speedMod = 0.50;
+  
+    }
+    if(abutton) {
+      
+      System.out.println ("A button is pressed black boy");
+      speedMod = 0.25;
+  
+    }*/
+
+    // robotDrive.arcadeDrive(lXAxis * speedMod,lYAxis * speedMod);
+
+   // m_myRobot.arcadeDrive(m_leftStick.getY(), m_rightStick.getY(Hand.kRight));
   }
+
+  /*public double getspeedMod(boolean AButton, boolean BButton, boolean YButton) {
+    boolean ybutton = c_xbox.getYButton();
+    boolean bbutton = c_xbox.getBButton();
+    boolean abutton = c_xbox.getAButton();
+  
+    boolean yButtonPressed = YButton;
+    boolean bButtonPressed = BButton;
+    boolean aButtonPressed = AButton;
+
+
+    if(yButtonPressed) {
+      
+      System.out.println ("Y button is pressed female dog");
+      intSpeed = 0.75;
+  
+    }
+    if(bButtonPressed) { 
+      
+      System.out.println ("B button is pressed coronavirus");
+      intSpeed = 0.50;
+  
+    }
+    if(aButtonPressed) {
+      
+      System.out.println ("A button is pressed black boy");
+      intSpeed = 0.25;
+  
+    }
+
+    return intSpeed;
+
+  }*/
   
 
   /**
