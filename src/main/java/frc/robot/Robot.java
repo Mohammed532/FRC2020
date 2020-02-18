@@ -2,7 +2,8 @@
 package frc.robot;
 
 
-
+// import com.revrobotics.ColorSensorV3;
+// import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -17,6 +18,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 // import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.GenericHID;
 
+import com.revrobotics.ColorSensorV3;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
+import edu.wpi.first.wpilibj.util.Color;
+
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
@@ -25,7 +31,7 @@ public class Robot extends TimedRobot {
   private final DifferentialDrive robotDrive = new DifferentialDrive(new Spark(0), new Spark(1)); //Sparks have placeholder values
   private final XboxController c_xbox = new XboxController(0); //Xbox controller port is a placeholder
   private final Timer timer = new Timer();
-  private final Spark spin = new Spark(0); //placeholder value
+  private final ColorSensor colorSensor = new ColorSensor();
   
   
   // private ShuffleboardTab dataTab = Shuffleboard.getTab("Sensor");
@@ -58,7 +64,8 @@ public class Robot extends TimedRobot {
   //  }
   @Override
   public void robotPeriodic(){
-
+    colorSensor.ColorSensorPeriodic(c_xbox);
+    colorSensor.ColorSensorInit();
   }
     
 //this is a random message
@@ -75,9 +82,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    
   }
 
   /**
@@ -116,8 +121,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-  if(c_xbox.getBumper(Hand.kLeft)){ //when left bumper is pressed, the wheel should function to spin accordingly
-    spin.set(1.0); //placeholder numbers
+  
   }
 
   /**
@@ -134,7 +138,8 @@ public class Robot extends TimedRobot {
   
 
 
-   }
+   
+   
    
 
   /**
