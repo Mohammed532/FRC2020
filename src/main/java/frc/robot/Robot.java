@@ -2,16 +2,23 @@
 package frc.robot;
 
 
-import frc.robot.Pneumatics;
 
+// import com.revrobotics.ColorSensorV3;
+// import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import java.util.Set;
-
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+// import edu.wpi.first.networktables.NetworkTableEntry;
+// import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.TimedRobot;
+// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+// import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -21,7 +28,12 @@ import edu.wpi.first.wpilibj.MedianFilter;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Compressor;
+import com.revrobotics.ColorSensorV3;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
+import edu.wpi.first.wpilibj.util.Color;
 
+import frc.robot.Pneumatics;
 
 public class Robot extends TimedRobot {
   
@@ -33,6 +45,13 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private final DifferentialDrive robotDrive = new DifferentialDrive(new Spark(0), new Spark(1)); //Sparks have placeholder values
   private final XboxController c_xbox = new XboxController(0); //Xbox controller port is a placeholder
+  private final ColorSensor colorSensor = new ColorSensor();
+  
+  
+  // private ShuffleboardTab dataTab = Shuffleboard.getTab("Sensor");
+  // private NetworkTableEntry redEntry, greenEntry, blueEntry, irEntry;
+ 
+ 
   private final DifferentialDrive ShooterWheels = new DifferentialDrive(new Spark(2), new Spark(3)); 
   private final Spark InWheels = new Spark(4); //SUCC=INTAKE WHEELS
   private final Timer autoTimer = new Timer();
@@ -44,10 +63,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
-
-   
-    
+    SmartDashboard.putData("Auto choices", m_chooser); 
   }
 
   /**
@@ -58,24 +74,17 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
    */
+
+  //  public void ColorMatch() {
+
+
+  //  }
   @Override
-  public void robotPeriodic() {
-    // vision.displayModifiedOutput();
-    // vision.printVid();
+  public void robotPeriodic(){
+    colorSensor.ColorSensorPeriodic(c_xbox);
+    colorSensor.ColorSensorInit();
   }
-
-
-  /**
-   * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to
-   * the switch structure below with additional strings. If using the
-   * SendableChooser make sure to add them to the chooser code above as well.
-   */
+    
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
@@ -103,7 +112,6 @@ public class Robot extends TimedRobot {
     }
 
   }
-
 
   @Override
   public void teleopInit() {
@@ -179,6 +187,24 @@ public class Robot extends TimedRobot {
   
 
   /**
+   * In addition to RGB IR values, the color sensor can also return an 
+   * infrared proximity value. The chip contains an IR led which will emit
+   * IR pulses and measure the intensity of the return. When an object is 
+   * close the value of the proximity will be large (max 2047 with default
+   * settings) and will approach zero when the object is far away.
+   * 
+   * Proximity can be used to roughly approximate the distance of an object
+   * or provide a threshold for when an object is close enough to provide
+   * accurate color values.
+   */
+  
+
+
+   
+   
+   
+
+  /**
    * This function is called periodically during test mode.
    */
 
@@ -188,5 +214,5 @@ public class Robot extends TimedRobot {
   }
 
 
-
 }
+
