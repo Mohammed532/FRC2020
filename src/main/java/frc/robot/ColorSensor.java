@@ -15,12 +15,8 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.DriverStation;
 /**
  * Add your docs here.
@@ -41,6 +37,8 @@ public class ColorSensor {
     
   Color detectedColor;
   double IR;
+
+  String selectedColor = "Null";
 
   public void ColorSensorInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
@@ -91,16 +89,38 @@ public class ColorSensor {
     
     String gameData;
     gameData = DriverStation.getInstance().getGameSpecificMessage();
-    
-    SmartDashboard.putString("Detected Color", colorString);
-    SmartDashboard.putString("Selected Color", );
-    
-    case 'B'
-    if ()  
 
-   
     
-      
+    
+    if(gameData.length() > 0){
+      switch(gameData.charAt(0)){
+        case 'B': //case the color needed is blue
+          selectedColor = "Blue";
+          break;
+        case 'R': //case the color needed is red
+          selectedColor = "Red";
+          break;
+        case 'G': //case the color needed is green
+          selectedColor = "Green";
+          break;
+        case 'Y': //case the color needed is yellow
+          selectedColor = "Yellow";
+          break;
+        default: //just here tbh
+          selectedColor = "null";
+          break;
+      }
+    }
+   
+    String isColorMatched = "Null";
+    if (colorString.equals(selectedColor)){
+      isColorMatched = "Yes";
+    }else{
+      isColorMatched = "No";
+    }
+    SmartDashboard.putString("Selected Color", selectedColor);
+    SmartDashboard.putString("Detected Color", colorString);
+    SmartDashboard.putString("Is Color Matched?", isColorMatched);  
   }
 }
 
