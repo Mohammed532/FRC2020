@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package frc.color;
 
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatch;
@@ -33,25 +33,19 @@ public class ColorSensor {
   private final Color kGreenTarget = ColorMatch.makeColor(0.16, 0.57, 0.26); 
   private final Color kBlueTarget = ColorMatch.makeColor(0.12, 0.40, 0.47);
   private final Color kYellowTarget = ColorMatch.makeColor(0.31, 0.56, 0.13);
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private final String kDefaultAuto = "Default";
-  private final String kCustomAuto = "My Auto";
-  private final Spark spin = new Spark(4); //placeholder value
+  private final Spark spin = new Spark(5); //placeholder value
   private String m_autoSelected;
     
   Color detectedColor;
   double IR;
+  String selectedColor = "Null";
 
   public void ColorSensorInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
     colormatcher.addColorMatch(kBlueTarget);
     colormatcher.addColorMatch(kRedTarget);
     colormatcher.addColorMatch(kGreenTarget);
     colormatcher.addColorMatch(kYellowTarget);
 
-    m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);      
 }
@@ -72,7 +66,6 @@ public class ColorSensor {
     //green = 0.163086 0.573975 0.262939
     //red = 0.542236 0.327393 0.130127
     //yellow = 0.317871 0.556641 0.125488 
-    System.out.println("ok");
     String colorString;
     ColorMatchResult match = colormatcher.matchClosestColor(detectedColor);
 
@@ -91,16 +84,39 @@ public class ColorSensor {
     
     String gameData;
     gameData = DriverStation.getInstance().getGameSpecificMessage();
-    
-    SmartDashboard.putString("Detected Color", colorString);
-    SmartDashboard.putString("Selected Color", );
-    
-    case 'B'
-    if ()  
 
-   
     
-      
+    
+    if(gameData.length() > 0){
+      switch(gameData.charAt(0)){
+        case 'B': //case the color needed is blue
+          selectedColor = "Blue";
+          break;
+        case 'R': //case the color needed is red
+          selectedColor = "Red";
+          break;
+        case 'G': //case the color needed is green
+          selectedColor = "Green";
+          break;
+        case 'Y': //case the color needed is yellow
+          selectedColor = "Yellow";
+          break;
+        default: //just here tbh
+          selectedColor = "null";
+          break;
+      }
+    }
+   
+    String isColorMatched = "Null";
+    if (colorString.equals(selectedColor)){
+      isColorMatched = "Yes";
+    }else{
+      isColorMatched = "No";
+    }
+    SmartDashboard.putString("Selected Color", selectedColor);
+    SmartDashboard.putString("Detected Color", colorString);
+    SmartDashboard.putString("Is Color Matched?", isColorMatched);
+         
   }
 }
 
