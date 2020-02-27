@@ -2,34 +2,21 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import java.util.Set;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.MedianFilter;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Compressor;
-import com.revrobotics.ColorSensorV3;
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
-import edu.wpi.first.wpilibj.util.Color;
+
 
 import frc.pneumatics.Pneumatics;
 // import frc.auto.PID;
 import frc.color.ColorSensor;
 
 public class Robot extends TimedRobot {
-  
-  double Speed;
-  
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
@@ -45,6 +32,8 @@ public class Robot extends TimedRobot {
 
   private final Pneumatics Pneumatics = new Pneumatics();
   private final ColorSensor colorSensor = new ColorSensor();
+
+  double Speed = 0.5;
 
   @Override
   public void robotInit() {
@@ -98,7 +87,7 @@ public class Robot extends TimedRobot {
     Pneumatics.Shooter(c_xbox);
     Pneumatics.Climber(c_xbox, teleCTimer);
 
-    double lXAxis = c_xbox.getRawAxis(0);
+    // double lXAxis = c_xbox.getRawAxis(0);
     double lYAxis = c_xbox.getRawAxis(1);
     double RT = c_xbox.getTriggerAxis(Hand.kRight);
     boolean RB = c_xbox.getBumper(Hand.kRight);
@@ -125,64 +114,24 @@ public class Robot extends TimedRobot {
 
   public double getspeedMod(XboxController xbox) {
     boolean ybutton = xbox.getYButton();
-    //boolean bbutton = xbox.getBButton();
-    //boolean abutton = xbox.getAButton();
+    boolean yButtonPress = false;
 
-    boolean yButtonPressedTwice = false;
-
-    if (sbox.getXButton() && !xButtonPress){
+    if (ybutton && !yButtonPress){
                         
-      xButtonPress = true;
+      yButtonPress = true;
 
-      if (!intakeOut){
-        System.out.println("Intake is out");
-        ClimberPiston.set(DoubleSolenoid.Value.kForward);
-        intakeOut = true;
-    } else {
-        System.out.println("Intake is in");
-        ClimberPiston.set(DoubleSolenoid.Value.kReverse);
-        intakeOut = false;
+      if (Speed == 0.5){
+        Speed = 0.75;
+      } else if (Speed == 0.75){
+        Speed = 0.5;
       }
     
-    } else if (!sbox.getXButton()){
-        xButtonPress = false;
+    } else if (!ybutton){
+        yButtonPress = false;
 
     }
-
-    if(ybutton && !yButtonPressedTwice) {
-      
-      // System.out.println ("Y button is pressed");
-      Speed = 0.75;
-      yButtonPressedTwice = true;
-
-    }else if (ybutton && yButtonPressedTwice){
-      // System.out.println ("Y button is pressed again");
-      Speed = 0.5;
-      yButtonPressedTwice = false;
-    }
-
-   /* if(bbutton) { 
-      
-      System.out.println ("B button is pressed");
-      Speed = 0.50;
-  
-    }
-    if(abutton) {
-      
-      System.out.println ("A button is pressed black boy");
-      Speed = 0.25;
-  
-    } */
 
     return Speed; 
-
   }
-
-  @Override
-  public void testPeriodic() {
- 
-  }
-
-
 }
 

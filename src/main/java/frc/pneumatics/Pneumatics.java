@@ -9,9 +9,9 @@ package frc.pneumatics;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.Solenoid;
  
 
 /**
@@ -41,54 +41,25 @@ public class Pneumatics {
         }
 
         public void Intake(XboxController sbox, Timer t) {
-                
-                boolean xButtonPress = false;
-                // t.start();
-                // System.out.println(intakeOut);s
 
-                // double setTime = 1;
-                // System.out.println(t.get());
-                //penis sauce!\
+                boolean xButtonPress = false;
+
                 if (sbox.getXButton() && !xButtonPress){
                         
                         xButtonPress = true;
 
                         if (!intakeOut){
-                                System.out.println("Intake is out");
-                                ClimberPiston.set(DoubleSolenoid.Value.kForward);
+                                IntakePiston.set(DoubleSolenoid.Value.kForward);
                                 intakeOut = true;
                         } else {
-                                System.out.println("Intake is in");
-                                ClimberPiston.set(DoubleSolenoid.Value.kReverse);
+                                IntakePiston.set(DoubleSolenoid.Value.kReverse);
                                 intakeOut = false;
                         }
 
-                } else if (!sbox.getXButton()){
+                } else if (!sbox.getBButton()){
                         xButtonPress = false;
-
                 }
-
-                /*if (sbox.getXButton() && !intakeOut) { 
-                        IntakePiston.set(DoubleSolenoid.Value.kForward);
-                        System.out.println("hit1 " + t.get());
-                        if (t.get() >= setTime){
-                                 System.out.println("hit2");
-                                t.reset();   
-                                intakeOut = true;
-                        }
                 
-                        IntakePiston.set(DoubleSolenoid.Value.kForward);
-                        intakeOut = true;
-                }else if (sbox.getXButton() && intakeOut) {
-                        IntakePiston.set(DoubleSolenoid.Value.kReverse);
-                        intakeOut = false; 
-
-                        if (t.get() == setTime){
-                                t.reset();   
-                                intakeOut = false;
-                        }
-                    
-                }*/
 
         }
 
@@ -103,14 +74,7 @@ public class Pneumatics {
         }
 
         public void Climber(XboxController sbox, Timer t) {
-                System.out.println("climberOut");
-
                 boolean bButtonPress = false;
-
-                t.start();
-
-                double setTime = 1;
-                System.out.println(t.get());
 
                 if (sbox.getBButton() && !bButtonPress){
                         
