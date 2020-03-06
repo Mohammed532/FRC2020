@@ -85,12 +85,8 @@ public class Robot extends TimedRobot {
 
   }
 
-  @Override
-  public void teleopInit() {
-    Pneumatics.startUp();
-    climberMotor.set(0.0);
 
-  }
+ 
 
 
   @Override
