@@ -9,6 +9,7 @@ package frc.pneumatics;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Timer;
 // import edu.wpi.first.wpilibj.Solenoid;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Pneumatics {
         boolean intakeOut = false;
         boolean climberOut = false;
+        double motorSpeed =  0.0;
 
         //Until we actually have a robot, almost all these are placeholders
         Compressor mainCompressor = new Compressor();
@@ -73,7 +75,7 @@ public class Pneumatics {
               }
         }
 
-        public void Climber(XboxController sbox, Timer t) {
+        public void Climber(XboxController sbox, Spark motor) {
                 boolean bButtonPress = false;
 
                 if (sbox.getBButton() && !bButtonPress){
@@ -82,7 +84,9 @@ public class Pneumatics {
 
                         if (!climberOut){
                                 System.out.println("Climber is out");
-                                ClimberPiston.set(DoubleSolenoid.Value.kForward);
+                                ClimberPiston.set(DoubleSolenoid.Value.kForward); 
+
+                                motorSpeed = 0.6;
                                 climberOut = true;
                         } else {
                                 System.out.println("Climber is in");
@@ -93,6 +97,8 @@ public class Pneumatics {
                 } else if (!sbox.getBButton()){
                         bButtonPress = false;
                 }
+
+                motor.set(motorSpeed);
 
                 /*if (sbox.getBButton() && !climberOut) {
 

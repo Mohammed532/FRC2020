@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 
 import frc.pneumatics.Pneumatics;
@@ -25,15 +26,18 @@ public class Robot extends TimedRobot {
   private final DifferentialDrive robotDrive = new DifferentialDrive(new Spark(0), new Spark(1)); //Sparks have placeholder values
   private final DifferentialDrive ShooterWheels = new DifferentialDrive(new Spark(2), new Spark(3)); 
   private final Spark InWheels = new Spark(4); //SUCC=INTAKE WHEELS
+  private final Spark climberMotor = new Spark(5);
   private final Timer autoTimer = new Timer();
   private final Ultrasonic ultra = new Ultrasonic(0, 1);
   private final Timer teleITimer = new Timer();
   private final Timer teleCTimer = new Timer();
 
+  // private final DigitalInput climberSwitch = new DigitalInput(1);
+
   private final Pneumatics Pneumatics = new Pneumatics();
   private final ColorSensor colorSensor = new ColorSensor();
 
-  double Speed = 0.5;
+  double Speed = 0.6;
 
   @Override
   public void robotInit() {
@@ -52,7 +56,15 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+
+    teleCTimer.start();
+    double cTime = teleCTimer.get();
+    
+    while (cTime <= 5){
+      climberMotor.set(-0.25);
+
+    }
+
 
     ultra.setAutomaticMode(true);
     autoTimer.start();
@@ -76,6 +88,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     Pneumatics.startUp();
+    climberMotor.set(0.0);
 
   }
 
@@ -85,15 +98,18 @@ public class Robot extends TimedRobot {
     
     Pneumatics.Intake(c_xbox, teleITimer);
     Pneumatics.Shooter(c_xbox);
-    Pneumatics.Climber(c_xbox, teleCTimer);
+    Pneumatics.Climber(c_xbox, climberMotor);
 
-    // double lXAxis = c_xbox.getRawAxis(0);
     double lYAxis = c_xbox.getRawAxis(1);
     double RT = c_xbox.getTriggerAxis(Hand.kRight);
     boolean RB = c_xbox.getBumper(Hand.kRight);
+    boolean LB = c_xbox.getBumper(Hand.kLeft);
     double rXAxis = c_xbox.getRawAxis(4);
     // double rYAxis = c_xbox.getRawAxis(5); 
     double speedMod = getspeedMod(c_xbox);
+
+    boolean LBPress = false;
+    int LBCount;
 
     robotDrive.arcadeDrive(lYAxis * speedMod, rXAxis * speedMod);
     //placeholder values por outake :)
@@ -108,6 +124,21 @@ public class Robot extends TimedRobot {
 
     }
     
+    if (LB){
+      climberMotor.set(0.25);
+
+    }
+
+    /*if (LB && !climberSwitch.get()){
+      while (!climberSwitch.get()){
+        climberMotor.set(1.0);
+
+      }
+
+    }else if (LB){
+      climberMotor.set(-1.0);
+
+    }*/
 
    // m_myRobot.arcadeDrive(m_leftStick.getY(), m_rightStick.getY(Hand.kRight));
   }
@@ -120,10 +151,10 @@ public class Robot extends TimedRobot {
                         
       yButtonPress = true;
 
-      if (Speed == 0.5){
-        Speed = 0.75;
-      } else if (Speed == 0.75){
-        Speed = 0.5;
+      if (Speed == 0.6){
+        Speed = 1.0;
+      } else if (Speed == 1.0){
+        Speed = 0.6;
       }
     
     } else if (!ybutton){
@@ -133,5 +164,6 @@ public class Robot extends TimedRobot {
 
     return Speed; 
   }
+
 }
 
