@@ -5,14 +5,13 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package frc.color;
 
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.XboxController;
@@ -29,35 +28,26 @@ public class ColorSensor {
   private final Color kGreenTarget = ColorMatch.makeColor(0.16, 0.57, 0.26); 
   private final Color kBlueTarget = ColorMatch.makeColor(0.12, 0.40, 0.47);
   private final Color kYellowTarget = ColorMatch.makeColor(0.31, 0.56, 0.13);
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private final String kDefaultAuto = "Default";
-  private final String kCustomAuto = "My Auto";
-  private final Spark spin = new Spark(4); //placeholder value
+  // private final Spark spin = new Spark(6); //placeholder value
   private String m_autoSelected;
     
   Color detectedColor;
   double IR;
-
   String selectedColor = "Null";
 
   public void ColorSensorInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
     colormatcher.addColorMatch(kBlueTarget);
     colormatcher.addColorMatch(kRedTarget);
     colormatcher.addColorMatch(kGreenTarget);
     colormatcher.addColorMatch(kYellowTarget);
 
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);      
+    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);     
 }
     
   public void ColorSensorPeriodic(XboxController xcon) {
-    if(xcon.getBumper(Hand.kLeft)){ //when left bumper is pressed, the wheel should function to spin accordingly
-      spin.set(1.0); //placeholder numbers
-    }
+    // if(xcon.getBumper(Hand.kLeft)){ //when left bumper is pressed, the wheel should function to spin accordingly
+    //   spin.set(1.0); //placeholder numbers
+    // }
     Color detectedColor = s_color.getColor();
     IR = s_color.getIR();
     // redEntry.setDouble(detectedColor.red);
@@ -70,7 +60,6 @@ public class ColorSensor {
     //green = 0.163086 0.573975 0.262939
     //red = 0.542236 0.327393 0.130127
     //yellow = 0.317871 0.556641 0.125488 
-    System.out.println("ok");
     String colorString;
     ColorMatchResult match = colormatcher.matchClosestColor(detectedColor);
 
@@ -120,7 +109,8 @@ public class ColorSensor {
     }
     SmartDashboard.putString("Selected Color", selectedColor);
     SmartDashboard.putString("Detected Color", colorString);
-    SmartDashboard.putString("Is Color Matched?", isColorMatched);  
+    SmartDashboard.putString("Is Color Matched?", isColorMatched);
+         
   }
 }
 
