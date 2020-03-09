@@ -8,6 +8,7 @@
 package frc.pneumatics;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Compressor;
@@ -21,7 +22,8 @@ import edu.wpi.first.wpilibj.Timer;
 public class Pneumatics {
         boolean intakeOut = false;
         boolean climberOut = false;
-        double motorSpeed =  0.0;
+        double motorUpSpeed =  0.0;
+        double motorDownSpeed = 0.0;
 
         //Until we actually have a robot, almost all these are placeholders
         Compressor mainCompressor = new Compressor();
@@ -40,6 +42,15 @@ public class Pneumatics {
                 ClimberPiston.set(DoubleSolenoid.Value.kReverse);
                 ShooterPiston.set(DoubleSolenoid.Value.kReverse);
 
+                motorUpSpeed = 0.0;
+                motorDownSpeed = 0.0;
+
+        }
+
+        public void disable(){
+                IntakePiston.set(DoubleSolenoid.Value.kOff);
+                ClimberPiston.set(DoubleSolenoid.Value.kOff);
+                ShooterPiston.set(DoubleSolenoid.Value.kOff);
         }
 
         public void Intake(XboxController sbox, Timer t) {
@@ -75,66 +86,24 @@ public class Pneumatics {
               }
         }
 
-        public void Climber(XboxController sbox, Spark motor) {
-                boolean bButtonPress = false;
-
-                if (sbox.getBButton() && !bButtonPress){
-                        
-                        bButtonPress = true;
-
-                        if (!climberOut){
-                                System.out.println("Climber is out");
-                                ClimberPiston.set(DoubleSolenoid.Value.kForward); 
-
-                                motorSpeed = 0.6;
-                                climberOut = true;
-                        } else {
-                                System.out.println("Climber is in");
-                                ClimberPiston.set(DoubleSolenoid.Value.kReverse);
-                                climberOut = false;
-                        }
-
-                } else if (!sbox.getBButton()){
-                        bButtonPress = false;
+        public void Climber(XboxController sbox, Spark motorUp, Spark motorDown) {
+                if(sbox.getBButton()){
+                        ClimberPiston.set(DoubleSolenoid.Value.kForward);
+                        motorUpSpeed = 1.0;
+                        motorDownSpeed = 0.0;
+                }
+                if(sbox.getAButton()){
+                        ClimberPiston.set(DoubleSolenoid.Value.kReverse);
+                        motorUpSpeed = 0.0;
+                        motorDownSpeed = 1.0;
+                }
+                if(sbox.getStickButton(Hand.kRight)){
+                        motorUpSpeed = 0.0;
+                        motorDownSpeed = 1.0;
                 }
 
-                motor.set(motorSpeed);
-
-                /*if (sbox.getBButton() && !climberOut) {
-
-                        if (!sbox.getBButtonPressed()){
-                                ClimberPiston.set(DoubleSolenoid.Value.kForward); 
-                                climberOut = true;
-                        }
-                        
-                        // ClimberPiston.set(DoubleSolenoid.Value.kForward); 
-                        // climberOut = true;
-
-                        /*System.out.println("hit1 " + t.get());
-                        if (t.get() >= setTime){
-                                System.out.println("hit2");
-                                t.reset();   
-                                climberOut = true;
-                        }*/
-
-                
-                /*}else if (sbox.getBButton() && climberOut) {
-                        
-                        if (!sbox.getBButtonPressed()){
-                                ClimberPiston.set(DoubleSolenoid.Value.kReverse); 
-                                climberOut = false;
-                        }
-                        
-                        // ClimberPiston.set(DoubleSolenoid.Value.kReverse);
-                        // climberOut = false;
-
-                        /*System.out.println("hit1 " + t.get());
-                        if (t.get() >= setTime){
-                                System.out.println("hit2");
-                                t.reset();   
-                                climberOut = false;
-                        }
-                }*/
+                motorUp.set(motorUpSpeed);
+                motorDown.set(motorDownSpeed);
         }
 }
 

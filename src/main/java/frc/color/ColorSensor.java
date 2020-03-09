@@ -28,7 +28,7 @@ public class ColorSensor {
   private final Color kGreenTarget = ColorMatch.makeColor(0.16, 0.57, 0.26); 
   private final Color kBlueTarget = ColorMatch.makeColor(0.12, 0.40, 0.47);
   private final Color kYellowTarget = ColorMatch.makeColor(0.31, 0.56, 0.13);
-  private final Spark spin = new Spark(6); //placeholder value
+  // private final Spark spin = new Spark(6); //placeholder value
   private String m_autoSelected;
     
   Color detectedColor;
@@ -41,14 +41,13 @@ public class ColorSensor {
     colormatcher.addColorMatch(kGreenTarget);
     colormatcher.addColorMatch(kYellowTarget);
 
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);      
+    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);     
 }
     
   public void ColorSensorPeriodic(XboxController xcon) {
-    if(xcon.getBumper(Hand.kLeft)){ //when left bumper is pressed, the wheel should function to spin accordingly
-      spin.set(1.0); //placeholder numbers
-    }
+    // if(xcon.getBumper(Hand.kLeft)){ //when left bumper is pressed, the wheel should function to spin accordingly
+    //   spin.set(1.0); //placeholder numbers
+    // }
     Color detectedColor = s_color.getColor();
     IR = s_color.getIR();
     // redEntry.setDouble(detectedColor.red);
